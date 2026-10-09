@@ -234,3 +234,6 @@ Genetic-Algorithm-RAG/trained_weights/
 
 # Local Claude Code settings
 .claude/
+
+# Markdown files
+*.md
