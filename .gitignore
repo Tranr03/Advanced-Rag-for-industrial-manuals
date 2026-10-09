@@ -205,3 +205,32 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# ------------------------------------------------------------------
+# Project-specific: keep data and results out of the repository
+# ------------------------------------------------------------------
+# Data (manuals, chunks, images, vector DB, BoW index, weights)
+data/
+*.json
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.sqlite3
+*.npy
+*.pkl
+*.csv
+
+# Results (evaluation spreadsheets)
+*.xlsx
+*.xls
+
+# Result folders (contain only json/xlsx outputs)
+RAGAS/
+RAGBench/
+Genetic-Algorithm-RAG/datasets/
+Genetic-Algorithm-RAG/evaluation/
+Genetic-Algorithm-RAG/trained_weights/
+
+# Local Claude Code settings
+.claude/

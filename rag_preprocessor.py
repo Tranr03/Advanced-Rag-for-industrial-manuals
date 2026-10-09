@@ -181,7 +181,13 @@ class RAGPreprocessor:
                       n_pages: int, status_fn, progress_fn=None) -> int:
         # Βρες ποιες σελίδες έχουν ήδη γίνει vision — για resume από crash
         existing_vision = self.collection.get(
-            where={"$and": [{"source": {"$eq": pdf_path.stem}}, {"type": {"$eq": "image_description"}}]},
+            where={"$and": [
+                {"source": {"$eq": pdf_path.stem}},
+                {"$or": [
+                    {"type": {"$eq": "image_description"}},
+                    {"type": {"$eq": "vision_skipped"}}
+                ]}
+            ]},
             include=[]
         )
         already_done = set(existing_vision["ids"])
@@ -193,6 +199,10 @@ class RAGPreprocessor:
         for page_idx in range(n_pages):
             vid = f"{pdf_path.stem}_vision_p{page_idx+1}"
             if vid in already_done:
+                continue
+            # PNG on disk means page was already sent to vision model (covers pre-fix data)
+            img_path_check = IMAGES_FOLDER / f"{pdf_path.stem}_page{page_idx+1:03d}.png"
+            if img_path_check.exists():
                 continue
             page         = doc[page_idx]
             has_graphics = any(getattr(obj, "type", None) == 2 for obj in page.get_objects())
@@ -228,10 +238,19 @@ class RAGPreprocessor:
                 avg_secs = sum(elapsed_times[-5:]) / len(elapsed_times[-5:])
                 progress_fn(done_count, total_pending, avg_secs)
 
+            vid = f"{pdf_path.stem}_vision_p{page_idx+1}"
+
             if not description or "NO_DIAGRAM" in description.upper():
+                # Store a marker so this page is not reprocessed on the next run
+                self.collection.add(
+                    ids       = [vid],
+                    embeddings= self.embedding_model.encode(["no diagram"], show_progress_bar=False).tolist(),
+                    documents = ["NO_DIAGRAM"],
+                    metadatas = [{"source": pdf_path.stem, "page": page_idx + 1,
+                                  "type": "vision_skipped"}]
+                )
                 continue
 
-            vid        = f"{pdf_path.stem}_vision_p{page_idx+1}"
             vision_emb = self.embedding_model.encode([description], show_progress_bar=False).tolist()
             self.collection.add(
                 ids       = [vid],
