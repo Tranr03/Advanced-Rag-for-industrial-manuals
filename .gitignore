@@ -220,7 +220,7 @@ data/
 *.npy
 *.pkl
 *.csv
-
+*.ico
 # Results (evaluation spreadsheets)
 *.xlsx
 *.xls
@@ -238,3 +238,4 @@ Genetic-Algorithm-RAG/trained_weights/
 # Markdown files
 *.md
 offline scripts/
+
