@@ -12,18 +12,7 @@ A local Retrieval-Augmented Generation (RAG) system for asking questions about i
 - **Evaluation tooling** — RAGAS evaluation on a custom question set and TRACe evaluation on three RAGBench subsets.
 
 ## How it works
-
-```
-                 ┌───────────────── Ingestion (rag_preprocessor.py) ─────────────────┐
-  PDF manuals ──►│ extract page text ─► chunk (800/80) ─► embed (bge-base-en-v1.5)   │──► ChromaDB
-                 │ pages with graphics ─► render PNG ─► describe with qwen3-vl:8b    │
-                 └───────────────────────────────────────────────────────────────────┘
-
-                 ┌───────────────── Query (rag_retriever_v2.py) ─────────────────────┐
-  Question ─────►│ embed ─► top-50 cosine search ─► GA reranker ─► top-k chunks      │──► Answer
-                 │                                   (learned weights)  ─► qwen3.5:27b│   + sources
-                 └───────────────────────────────────────────────────────────────────┘
-```
+![Technical Assistant RAG pipeline](assets/pipeline.png)
 
 ### Retriever versions
 
@@ -153,7 +142,7 @@ python bm25_bow.py --input data/markdown_temp --output data/bow.json
 ```
 
 ## Evaluation
-
+![Technical Assistant RAG pipeline](assets/evaluation_pyramid_en.png)
 Set your OpenAI key first:
 
 ```bash
