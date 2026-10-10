@@ -213,9 +213,6 @@ __marimo__/
 data/
 *.json
 *.pdf
-# Allow images in assets/
-!assets/*.png
-
 *.png
 *.jpg
 *.jpeg
@@ -241,4 +238,7 @@ Genetic-Algorithm-RAG/trained_weights/
 # Markdown files
 *.md
 offline scripts/
+
+# Exceptions (must stay at the end of the file)
+!assets/*.png
 
