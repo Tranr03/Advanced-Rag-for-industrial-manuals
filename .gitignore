@@ -213,6 +213,9 @@ __marimo__/
 data/
 *.json
 *.pdf
+# Allow images in assets/
+!assets/*.png
+
 *.png
 *.jpg
 *.jpeg
